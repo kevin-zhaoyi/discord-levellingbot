@@ -2,6 +2,11 @@ import discord
 
 client = discord.Client()
 
+# Hide token from being comitted
+tokenfile = open("token.txt", 'r')
+token = tokenfile.read()
+tokenfile.close()
+
 @client.event
 async def on_ready():
     print("Bot is online")
@@ -13,4 +18,4 @@ async def on_message(message):
     if message.content.startswith("$hello"):
         await message.channel.send("Hello")
 
-client.run("ODE1MTg3MDIzNTI1NTc2NzA0.YDowEw.rNogUwEn1zSI6bvy9cWpuWmtPgg")
+client.run(token)
