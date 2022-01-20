@@ -4,7 +4,12 @@ from func.read_token import read_token
 
 
 
+
+# Import modules ********************************
 import discord
+
+# Import modules ********************************
+
 
 
 
@@ -26,9 +31,24 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+
+    # If the user is the bot, ignore.
     if message.author == client.user:
         return
-    if message.content.startswith("$hello"):
-        await message.channel.send("Hello")
+    
 
+    # EXP system on user message *****************
+    get_user_exp(message.author.id)
+
+
+
+
+
+
+
+
+
+
+
+# Run the bot.
 client.run(bot_token)
