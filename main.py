@@ -8,9 +8,6 @@ from func.exp import *
 
 # Import modules ********************************
 import discord
-from datetime import datetime, timedelta
-import time
-import dateutil.parser
 # Import modules ********************************
 
 
@@ -36,24 +33,28 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-
+    
     # If the user is the bot, ignore.
     if message.author == client.user:
         return
 
-    
-
+    user_id = message.author.id
+    global exp_data
     
     
     # EXP system on user message *****************
-    get_user_exp(message.author.id)
+    if not is_user_in_data(user_id, exp_data):
+        exp_data = create_new_user(user_id, exp_data)
+
+    
 
 
 
     # Check if 15 minutes has passed since last backup.
-    if(check_backup()):
+    if check_backup():
+        print("needs backup")
         datafile = open("./data/user_exp_data.json", 'r')
-        backup_data(datafile, data)
+        #backup_data(datafile, data)
         datafile.close()
 
 
