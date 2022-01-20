@@ -16,7 +16,7 @@ Output: (bool)
 """
     
 def check_backup():
-    MINUTES_BEFORE_BACKUP = 15
+    MINUTES_BEFORE_BACKUP = 0.1
 
     last_backup_time = open("./data/last_called.txt", 'r')
     backup_time = last_backup_time.read()
@@ -83,8 +83,11 @@ def create_new_user(user_id, exp_data):
     return exp_data
 
 
-
-
+def add_exp(user_id, exp_data, amount):
+    user_exp = exp_data[user_id]
+    user_exp += amount
+    exp_data[user_id] = user_exp
+    return exp_data
 
 
     

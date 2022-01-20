@@ -38,7 +38,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    user_id = message.author.id
+    user_id = str(message.author.id)
     global exp_data
     
     
@@ -46,7 +46,9 @@ async def on_message(message):
     if not is_user_in_data(user_id, exp_data):
         exp_data = create_new_user(user_id, exp_data)
 
-    
+    # Generate exp for user
+    TEMP_FLAT_EXP = 10
+    add_exp(user_id, exp_data, TEMP_FLAT_EXP)
 
 
 
