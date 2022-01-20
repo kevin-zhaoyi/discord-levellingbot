@@ -1,5 +1,43 @@
 import json
+from datetime import datetime, timedelta
+import dateutil.parser
 
+
+"""
+def check_backup()
+
+Check the last time the data has been backed up.
+If the time since last backup has exceeded MINUTES_BEFORE_BACKUP, backup the data.
+
+Input: none
+
+Output: (bool)
+    Whether or not the data needs to be backed up.
+"""
+    
+def check_backup():
+    MINUTES_BEFORE_BACKUP = 15
+
+    last_backup_time = open("./data/last_called.txt", 'r')
+    backup_time = last_backup_time.read()
+    last_backup_time.close()
+
+    backup_time_datetime = dateutil.parser.parse(backup_time)
+    current_time = datetime.now()
+
+    # The total minutes passed since last backup
+    time_delta = (current_time - backup_time_datetime)
+    total_minutes = time_delta.total_seconds() / 60
+
+    # Check if a new backup is required
+    if total_minutes > MINUTES_BEFORE_BACKUP:
+        return True
+    else:
+        return False
+
+    
+#def backup_data(json_data):
+#    if 
 
 
 def load_exp_data():
