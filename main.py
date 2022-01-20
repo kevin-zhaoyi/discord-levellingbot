@@ -1,15 +1,28 @@
+# Import functions ******************************
+from func.read_token import read_token
+# Import functions ******************************
+
+
+
 import discord
 
-client = discord.Client()
 
-# Hide token from being comitted
-tokenfile = open("token.txt", 'r')
-token = tokenfile.read()
-tokenfile.close()
+
+# Global definitions ****************************
+client = discord.Client()
+bot_token = read_token()
+# ***********************************************
+
+
+
 
 @client.event
 async def on_ready():
     print("Bot is online")
+
+
+
+    
 
 @client.event
 async def on_message(message):
@@ -18,4 +31,4 @@ async def on_message(message):
     if message.content.startswith("$hello"):
         await message.channel.send("Hello")
 
-client.run(token)
+client.run(bot_token)
