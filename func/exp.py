@@ -36,8 +36,15 @@ def check_backup():
         return False
 
     
-#def backup_data(json_data):
-#    if 
+def backup_data(exp_data):
+    datafile = open("./data/user_exp_data.json", 'w')
+    datafile.write(json.dumps(exp_data))
+    datafile.close()
+
+    # Also update the time
+    last_backup_time = open("./data/last_called.txt", 'w')
+    last_backup_time.write(f"{datetime.now()}")
+    last_backup_time.close()
 
 
 def load_exp_data():

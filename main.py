@@ -52,10 +52,8 @@ async def on_message(message):
 
     # Check if 15 minutes has passed since last backup.
     if check_backup():
-        print("needs backup")
-        datafile = open("./data/user_exp_data.json", 'r')
-        #backup_data(datafile, data)
-        datafile.close()
+        backup_data(exp_data)
+        
 
 
 
