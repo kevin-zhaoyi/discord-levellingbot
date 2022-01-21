@@ -14,9 +14,8 @@ Input: none
 Output: (bool)
     Whether or not the data needs to be backed up.
 """
-    
 def check_backup():
-    MINUTES_BEFORE_BACKUP = 0.1
+    MINUTES_BEFORE_BACKUP = 10
 
     last_backup_time = open("./data/last_called.txt", 'r')
     backup_time = last_backup_time.read()
@@ -35,7 +34,18 @@ def check_backup():
     else:
         return False
 
-    
+
+"""
+def backup_data(exp_data)
+
+Backs up the data to the local file.
+
+Input: exp_data                         (dict)
+    The experience json data for each user
+
+Output: none
+"""
+
 def backup_data(exp_data):
     datafile = open("./data/user_exp_data.json", 'w')
     datafile.write(json.dumps(exp_data))
@@ -47,6 +57,18 @@ def backup_data(exp_data):
     last_backup_time.close()
 
 
+
+
+"""
+def load_exp_data()
+
+Loads the experience data saved locally to the dynamic memory.
+
+Input: none
+
+Output: exp_data                         (dict)
+    The experience json data for each user.
+"""
 def load_exp_data():
     exp_data_file = open("./data/user_exp_data.json", 'r')
     exp_data = json.loads(exp_data_file.read())
@@ -60,11 +82,11 @@ def is_user_in_data(user_id, exp_data):
         return False
 
 """
-def create_new_user(user_id)
+def create_new_user(user_id, exp_data)
 
 Create a new record for the user in the json data file and sets the exp value to 0.
 
-Input: user_id               (int)
+Input: user_id               (str)
     The user's uid
        exp_data              (dict)
     The data containing all users' exp.
@@ -82,7 +104,21 @@ def create_new_user(user_id, exp_data):
 
     return exp_data
 
+"""
+func add_exp(user_id, exp_data, amount)
 
+Adds an amount of exp to a user.
+
+Input: user_id                     (str)
+    The user's id
+       exp_data                    (dict)
+    The data containing all users' exp
+       amount                      (int)
+    An integer amount to add to the user's exp.
+
+Output: exp_data                   (dict)
+    The updated data containing all users' exp.
+"""
 def add_exp(user_id, exp_data, amount):
     user_exp = exp_data[user_id]
     user_exp += amount

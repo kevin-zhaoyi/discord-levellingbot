@@ -39,24 +39,25 @@ async def on_message(message):
         return
 
     user_id = str(message.author.id)
+    
+    
+    # EXP system on user message *****************************************
     global exp_data
     
-    
-    # EXP system on user message *****************
     if not is_user_in_data(user_id, exp_data):
         exp_data = create_new_user(user_id, exp_data)
 
     # Generate exp for user
     TEMP_FLAT_EXP = 10
-    add_exp(user_id, exp_data, TEMP_FLAT_EXP)
+    exp_data = add_exp(user_id, exp_data, TEMP_FLAT_EXP)
 
 
 
-    # Check if 15 minutes has passed since last backup.
+    # Check if sufficient time has passed since last backup.
     if check_backup():
         backup_data(exp_data)
         
-
+    # EXP system on user message *****************************************
 
 
 
