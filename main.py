@@ -44,14 +44,25 @@ async def on_message(message):
     
     # EXP system on user message *****************************************
     global exp_data
-    
+    global message_cooldown
+
+    # Check if the user exists
     if not is_user_in_data(user_id, exp_data):
         exp_data = create_new_user(user_id, exp_data)
 
-    # Generate exp for user
-    TEMP_FLAT_EXP = 10
-    exp_data = add_exp(user_id, exp_data, TEMP_FLAT_EXP)
+    if not is_user_in_data(user_id, message_cooldown):
+        message_cooldown = create_new_user_cooldown(user_id, message_cooldown)
 
+        
+    # Generate exp for user
+
+    # Check if the user is eligible for exp before giving exp
+    TEMP_FLAT_EXP = 10
+    if not is_on_exp_gain_cooldown(user_id, message_cooldown):
+        exp_data = add_exp(user_id, exp_data, TEMP_FLAT_EXP)
+        message_cooldown = set_user_exp_cooldown(user_id, message_cooldown)
+    else:
+        print("currently on cooldown")
 
 
     # Check if sufficient time has passed since last backup.

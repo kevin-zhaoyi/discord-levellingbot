@@ -85,14 +85,14 @@ Queries whether user is in the data.
 
 Input: user_id                     (str)
     The user's id
-       exp_data                    (dict)
-    The json experience data.
+       data                        (dict)
+    The json data dict.
 
 Output: (bool)
     Whether or not the user is in the data.
 """
-def is_user_in_data(user_id, exp_data):
-    if user_id in exp_data.keys():
+def is_user_in_data(user_id, data):
+    if user_id in data.keys():
         return True
     else:
         return False
@@ -123,7 +123,15 @@ def create_new_user(user_id, exp_data):
 
     return exp_data
 
+def create_new_user_cooldown(user_id, cooldowns):
 
+    # Create new json record
+    new_user = {f"{user_id}": f"{datetime.now()}"}
+
+    # Append json record.
+    cooldowns.update(new_user)
+
+    return cooldowns
 
 
 """
@@ -148,11 +156,12 @@ def add_exp(user_id, exp_data, amount):
     return exp_data
 
 def time_since_last_exp(user_id, cooldowns):
+
     last_exp_time = dateutil.parser.parse(cooldowns[user_id])
     time_now = datetime.now()
     
     # The total seconds passed since last backup
-    time_delta = (current_time - backup_time_datetime)
+    time_delta = (time_now - last_exp_time)
     total_seconds = time_delta.total_seconds()
 
     return total_seconds
@@ -165,3 +174,6 @@ def is_on_exp_gain_cooldown(user_id, cooldowns):
     else:
         return True
 
+def set_user_exp_cooldown(user_id, cooldowns):
+    cooldowns[user_id] = f"{datetime.now()}"
+    return cooldowns
