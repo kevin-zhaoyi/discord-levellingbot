@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, timedelta
 import dateutil.parser
-
+import random
 
 """
 func check_backup()
@@ -239,3 +239,13 @@ Output: cooldowns            (dict)
 def set_user_exp_cooldown(user_id, cooldowns):
     cooldowns[user_id] = f"{datetime.now()}"
     return cooldowns
+
+
+def randomise_exp():
+    return random.randint(1,50)
+
+def lottery_exp():
+    if random.randint(1,100) == 77:
+        return True
+    else:
+        return False

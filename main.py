@@ -63,10 +63,15 @@ async def on_message(message):
         
 
     # Check if the user is eligible for exp before giving exp
-    TEMP_FLAT_EXP = 10
     if not is_on_exp_gain_cooldown(user_id, message_cooldown):
-        print('s')
-        exp_data = add_exp(user_id, exp_data, TEMP_FLAT_EXP)
+        JACKPOT_EXP = 1000
+        
+        exp_data = add_exp(user_id, exp_data, randomise_exp())
+
+        # Random chance to get lots of exp
+        if lottery_exp():
+            exp_data = add_exp(user_id, exp_data, JACKPOT_EXP)
+            
         message_cooldown = set_user_exp_cooldown(user_id, message_cooldown)
 
 
