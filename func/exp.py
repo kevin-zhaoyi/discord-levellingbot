@@ -15,7 +15,7 @@ Output: (bool)
     Whether or not the data needs to be backed up.
 """
 def check_backup():
-    MINUTES_BEFORE_BACKUP = 10
+    MINUTES_BEFORE_BACKUP = 0.01
 
     last_backup_time = open("./data/last_called.txt", 'r')
     backup_time = last_backup_time.read()
@@ -73,6 +73,7 @@ def load_exp_data():
     exp_data_file = open("./data/user_exp_data.json", 'r')
     exp_data = json.loads(exp_data_file.read())
     exp_data_file.close()
+    print(exp_data)
     return exp_data
 
 
@@ -114,12 +115,8 @@ Output: exp_data             (dict)
     The updated data containing all users' exp.
 """
 def create_new_user(user_id, exp_data):
-
-    # Create new json record
-    new_user = {f"{user_id}": 0}
-
-    # Append json record.
-    exp_data.update(new_user)
+    
+    exp_data[f"{user_id}"] = 0
 
     return exp_data
 
@@ -143,11 +140,8 @@ Output: cooldowns            (dict)
 
 def create_new_user_cooldown(user_id, cooldowns):
 
-    # Create new json record
-    new_user = {f"{user_id}": f"{datetime.now()}"}
 
-    # Append json record.
-    cooldowns.update(new_user)
+    cooldowns[f"{user_id}"] = f"{datetime.now()}"
 
     return cooldowns
 

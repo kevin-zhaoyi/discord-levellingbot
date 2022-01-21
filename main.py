@@ -27,6 +27,7 @@ message_cooldown = {}
 @client.event
 async def on_ready():
     print("Bot is online")
+    global exp_data
     exp_data = load_exp_data()
 
 
