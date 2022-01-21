@@ -18,6 +18,7 @@ client = discord.Client()
 bot_token = read_token()
 
 exp_data = {}
+message_cooldown = {}
 # ***********************************************
 
 

@@ -4,7 +4,7 @@ import dateutil.parser
 
 
 """
-def check_backup()
+func check_backup()
 
 Check the last time the data has been backed up.
 If the time since last backup has exceeded MINUTES_BEFORE_BACKUP, backup the data.
@@ -36,7 +36,7 @@ def check_backup():
 
 
 """
-def backup_data(exp_data)
+func backup_data(exp_data)
 
 Backs up the data to the local file.
 
@@ -60,7 +60,7 @@ def backup_data(exp_data):
 
 
 """
-def load_exp_data()
+func load_exp_data()
 
 Loads the experience data saved locally to the dynamic memory.
 
@@ -75,14 +75,33 @@ def load_exp_data():
     exp_data_file.close()
     return exp_data
 
+
+
+
+"""
+func is_user_in_data(user_id, exp_data)
+
+Queries whether user is in the data.
+
+Input: user_id                     (str)
+    The user's id
+       exp_data                    (dict)
+    The json experience data.
+
+Output: (bool)
+    Whether or not the user is in the data.
+"""
 def is_user_in_data(user_id, exp_data):
     if user_id in exp_data.keys():
         return True
     else:
         return False
 
+
+    
+
 """
-def create_new_user(user_id, exp_data)
+func create_new_user(user_id, exp_data)
 
 Create a new record for the user in the json data file and sets the exp value to 0.
 
@@ -103,6 +122,9 @@ def create_new_user(user_id, exp_data):
     exp_data.update(new_user)
 
     return exp_data
+
+
+
 
 """
 func add_exp(user_id, exp_data, amount)
@@ -125,5 +147,21 @@ def add_exp(user_id, exp_data, amount):
     exp_data[user_id] = user_exp
     return exp_data
 
-
+def time_since_last_exp(user_id, cooldowns):
+    last_exp_time = dateutil.parser.parse(cooldowns[user_id])
+    time_now = datetime.now()
     
+    # The total seconds passed since last backup
+    time_delta = (current_time - backup_time_datetime)
+    total_seconds = time_delta.total_seconds()
+
+    return total_seconds
+
+def is_on_exp_gain_cooldown(user_id, cooldowns):
+    COOLDOWN_TIME_SECS = 10
+    
+    if time_since_last_exp(user_id, cooldowns) > COOLDOWN_TIME_SECS:
+        return False
+    else:
+        return True
+
