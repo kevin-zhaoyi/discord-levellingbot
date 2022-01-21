@@ -123,6 +123,24 @@ def create_new_user(user_id, exp_data):
 
     return exp_data
 
+
+
+
+"""
+func create_new_user_cooldown(user_id, cooldowns)
+
+Similar to create_new_user(user_id, exp_data), for the cooldown dict.
+
+Input: user_id               (str)
+    The user's uid
+       cooldowns             (dict)
+    The data containing all users' exp gain cooldowns.
+
+Output: cooldowns            (dict)
+    The updated data containing all users' exp cooldowns.
+"""
+
+
 def create_new_user_cooldown(user_id, cooldowns):
 
     # Create new json record
@@ -155,6 +173,22 @@ def add_exp(user_id, exp_data, amount):
     exp_data[user_id] = user_exp
     return exp_data
 
+
+
+
+"""
+func time_since_last_exp(user_id, cooldowns)
+
+The time in seconds since the last exp earned by this user.
+
+Input: user_id               (str)
+    The user's uid
+       cooldowns             (dict)
+    The data containing all users' exp gain cooldowns.
+
+Output: total_seconds        (int)
+    The number of seconds since the last time the user gained exp.
+"""
 def time_since_last_exp(user_id, cooldowns):
 
     last_exp_time = dateutil.parser.parse(cooldowns[user_id])
@@ -166,6 +200,24 @@ def time_since_last_exp(user_id, cooldowns):
 
     return total_seconds
 
+
+
+
+
+
+"""
+func is_on_exp_gain_cooldown(user_id, cooldowns)
+
+Queries if the user can get exp or not.
+
+Input: user_id               (str)
+    The user's uid
+       cooldowns             (dict)
+    The data containing all users' exp gain cooldowns.
+
+Output: (bool)
+    Is the exp gain on cooldown.
+"""
 def is_on_exp_gain_cooldown(user_id, cooldowns):
     COOLDOWN_TIME_SECS = 10
     
@@ -174,6 +226,22 @@ def is_on_exp_gain_cooldown(user_id, cooldowns):
     else:
         return True
 
+
+
+
+"""
+func set_user_exp_cooldown(user_id, cooldowns)
+
+Sets the user's exp gain on cooldown.
+
+Input: user_id               (str)
+    The user's uid
+       cooldowns             (dict)
+    The data containing all users' exp gain cooldowns.
+
+Output: cooldowns            (dict)
+    The updated data containing all the exp gain cooldowns.
+"""
 def set_user_exp_cooldown(user_id, cooldowns):
     cooldowns[user_id] = f"{datetime.now()}"
     return cooldowns
