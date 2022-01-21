@@ -42,15 +42,21 @@ Backs up the data to the local file.
 
 Input: exp_data                         (dict)
     The experience json data for each user
+       level_data                       (dict)
+    The level json data for each user
 
 Output: none
 """
 
-def backup_data(exp_data):
+def backup_data(exp_data, level_data):
     datafile = open("./data/user_exp_data.json", 'w')
     datafile.write(json.dumps(exp_data))
     datafile.close()
 
+    datafile = open("./data/user_level_data.json", 'w')
+    datafile.write(json.dumps(level_data))
+    datafile.close()
+    
     # Also update the time
     last_backup_time = open("./data/last_called.txt", 'w')
     last_backup_time.write(f"{datetime.now()}")
@@ -75,7 +81,17 @@ def load_exp_data():
     exp_data_file.close()
     return exp_data
 
+def load_level_data():
+    level_data_file = open("./data/user_level_data.json", 'r')
+    level_data = json.loads(level_data_file.read())
+    level_data_file.close()
+    return level_data
 
+def load_level_requirements():
+    level_requirements_file = open("./data/level_requirements.json", 'r')
+    level_requirements = json.loads(level_requirements_file.read())
+    level_requirements_file.close()
+    return level_requirements
 
 
 """
@@ -249,3 +265,41 @@ def lottery_exp():
         return True
     else:
         return False
+
+def calculate_new_level_requirement(level):
+    """ Formula for the exp needed per level
+        lv^3 * 1000exp.
+    """
+    return pow(level, 3) * 1000
+
+def level_up(user_id, exp_data, level_data, level_requirements):
+    
+    user_level = level_data[user_id]
+    user_exp = exp_data[user_id]
+
+    user_exp = user_exp - level_requirements[str(user_level + 1)]
+    user_level = user_level + 1
+
+    exp_data[user_id] = user_exp
+    level_data[user_id] = user_level
+
+    
+    # Check there is a requirement for next level.
+    if not str(user_level + 1) in level_requirements.keys():
+        level_requirements[str(user_level + 1)] = calculate_new_level_requirement(user_level + 1)
+        # Write to local file
+        datafile = open("./data/level_requirements.json", 'w')
+        datafile.write(json.dumps(level_requirements))
+        datafile.close()
+    return (exp_data, level_data, level_requirements)
+
+def can_level_up(user_id, exp_data, level_data, level_requirements):
+
+    user_level = level_data[user_id]
+    user_exp = exp_data[user_id]
+    print(level_requirements)
+    if user_exp >= level_requirements[str(user_level + 1)]:
+        return True
+    else:
+        return False
+    

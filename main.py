@@ -22,7 +22,9 @@ client = commands.Bot(command_prefix='!', intents=intents)
 bot_token = read_token()
 
 exp_data = {}
+level_data = {}
 message_cooldown = {}
+level_requirements = {}
 
 bot = discord.ext.commands.Bot
 # ***********************************************
@@ -34,9 +36,11 @@ bot = discord.ext.commands.Bot
 async def on_ready():
     print("Bot is online")
     global exp_data
+    global level_data
+    global level_requirements
     exp_data = load_exp_data()
-
-
+    level_data = load_level_data()
+    level_requirements = load_level_requirements()
     
 
 @client.event
@@ -51,12 +55,17 @@ async def on_message(message):
     
     # EXP system on user message *****************************************
     global exp_data
+    global level_data
+    global level_requirements
     global message_cooldown
 
     # Check if the user exists
     if not is_user_in_data(user_id, exp_data):
         exp_data = create_new_user(user_id, exp_data)
 
+    if not is_user_in_data(user_id, level_data):
+        level_data = create_new_user(user_id, level_data)
+    
     if not is_user_in_data(user_id, message_cooldown):
         message_cooldown = create_new_user_cooldown(user_id, message_cooldown)
 
@@ -74,10 +83,14 @@ async def on_message(message):
             
         message_cooldown = set_user_exp_cooldown(user_id, message_cooldown)
 
+    # Check if the user is eligible for level up
+    if can_level_up(user_id, exp_data, level_data, level_requirements):
+        exp_data, level_data, level_requirements = level_up(user_id, exp_data, level_data, level_requirements)
+        await message.channel.send(f"Congratulations, you levelled up to level {level_data[user_id]}!")
 
     # Check if sufficient time has passed since last backup.
     if check_backup():
-        backup_data(exp_data)
+        backup_data(exp_data, level_data)
         
     # EXP system on user message *****************************************
 
@@ -90,8 +103,15 @@ async def on_message(message):
 @client.command()
 async def level(ctx):
     global exp_data
+    global level_data
+    global level_requirements
+
     user_id = str(ctx.message.author.id)
-    await ctx.send(f"You have {exp_data[user_id]} exp.")
+    user_exp = exp_data[user_id]
+    user_level = level_data[user_id]
+    
+    user_id = str(ctx.message.author.id)
+    await ctx.send(f"You have {user_exp}/{level_requirements[str(user_level+1)]} exp. You need {level_requirements[str(user_level+1)]-user_exp} more exp until level {user_level+1}.")
 
 
 
