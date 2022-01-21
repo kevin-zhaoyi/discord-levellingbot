@@ -73,7 +73,6 @@ def load_exp_data():
     exp_data_file = open("./data/user_exp_data.json", 'r')
     exp_data = json.loads(exp_data_file.read())
     exp_data_file.close()
-    print(exp_data)
     return exp_data
 
 

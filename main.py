@@ -8,17 +8,23 @@ from func.exp import *
 
 # Import modules ********************************
 import discord
+from discord.ext import commands
 # Import modules ********************************
 
 
 
 
 # Global definitions ****************************
-client = discord.Client()
+intents = discord.Intents.default()
+intents.members = True
+
+client = commands.Bot(command_prefix='!', intents=intents)
 bot_token = read_token()
 
 exp_data = {}
 message_cooldown = {}
+
+bot = discord.ext.commands.Bot
 # ***********************************************
 
 
@@ -55,15 +61,12 @@ async def on_message(message):
         message_cooldown = create_new_user_cooldown(user_id, message_cooldown)
 
         
-    # Generate exp for user
 
     # Check if the user is eligible for exp before giving exp
     TEMP_FLAT_EXP = 10
     if not is_on_exp_gain_cooldown(user_id, message_cooldown):
         exp_data = add_exp(user_id, exp_data, TEMP_FLAT_EXP)
         message_cooldown = set_user_exp_cooldown(user_id, message_cooldown)
-    else:
-        print("currently on cooldown")
 
 
     # Check if sufficient time has passed since last backup.
@@ -71,6 +74,12 @@ async def on_message(message):
         backup_data(exp_data)
         
     # EXP system on user message *****************************************
+
+
+
+    
+    await client.process_commands(message)
+
 
 
 
