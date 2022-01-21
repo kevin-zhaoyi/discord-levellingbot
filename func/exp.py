@@ -164,6 +164,7 @@ def add_exp(user_id, exp_data, amount):
     user_exp = exp_data[user_id]
     user_exp += amount
     exp_data[user_id] = user_exp
+    print(exp_data)
     return exp_data
 
 
@@ -212,7 +213,7 @@ Output: (bool)
     Is the exp gain on cooldown.
 """
 def is_on_exp_gain_cooldown(user_id, cooldowns):
-    COOLDOWN_TIME_SECS = 10
+    COOLDOWN_TIME_SECS = 1
     
     if time_since_last_exp(user_id, cooldowns) > COOLDOWN_TIME_SECS:
         return False
