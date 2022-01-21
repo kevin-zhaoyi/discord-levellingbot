@@ -15,7 +15,7 @@ Output: (bool)
     Whether or not the data needs to be backed up.
 """
 def check_backup():
-    MINUTES_BEFORE_BACKUP = 0.01
+    MINUTES_BEFORE_BACKUP = 10
 
     last_backup_time = open("./data/last_called.txt", 'r')
     backup_time = last_backup_time.read()
@@ -229,7 +229,7 @@ Output: (bool)
     Is the exp gain on cooldown.
 """
 def is_on_exp_gain_cooldown(user_id, cooldowns):
-    COOLDOWN_TIME_SECS = 1
+    COOLDOWN_TIME_SECS = 5
     
     if time_since_last_exp(user_id, cooldowns) > COOLDOWN_TIME_SECS:
         return False
@@ -277,7 +277,7 @@ def level_up(user_id, exp_data, level_data, level_requirements):
     user_level = level_data[user_id]
     user_exp = exp_data[user_id]
 
-    user_exp = user_exp - level_requirements[str(user_level + 1)]
+    #user_exp = user_exp - level_requirements[str(user_level + 1)]
     user_level = user_level + 1
 
     exp_data[user_id] = user_exp

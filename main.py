@@ -9,6 +9,7 @@ from func.exp import *
 # Import modules ********************************
 import discord
 from discord.ext import commands
+from discord.utils import get
 # Import modules ********************************
 
 
@@ -27,6 +28,8 @@ message_cooldown = {}
 level_requirements = {}
 
 bot = discord.ext.commands.Bot
+
+
 # ***********************************************
 
 
@@ -44,6 +47,7 @@ async def on_ready():
     
 
 @client.event
+
 async def on_message(message):
     
     # If the user is the bot, ignore.
@@ -54,6 +58,13 @@ async def on_message(message):
     
     
     # EXP system on user message *****************************************
+    # System is only eligible for users with Hero 5 role.
+    role_ids = [731399058324848660, 933692390869446676, 933945534211825714, 933948618866589806]
+    HERO5_role = discord.utils.get(message.guild.roles, id=role_ids[0])
+    if not HERO5_role in message.author.roles:
+        return
+
+    
     global exp_data
     global level_data
     global level_requirements
@@ -87,7 +98,17 @@ async def on_message(message):
     if can_level_up(user_id, exp_data, level_data, level_requirements):
         exp_data, level_data, level_requirements = level_up(user_id, exp_data, level_data, level_requirements)
         await message.channel.send(f"Congratulations, you levelled up to level {level_data[user_id]}!")
+        # Give user new role.
+        new_role = discord.utils.get(message.guild.roles, id=role_ids[level_data[user_id]])
+        await message.author.add_roles(new_role)
 
+        # Always backup after level up
+        backup_data(exp_data, level_data)
+        
+        return
+
+
+        
     # Check if sufficient time has passed since last backup.
     if check_backup():
         backup_data(exp_data, level_data)
