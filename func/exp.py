@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import dateutil.parser
 import random
 
+import discord
 """
 func check_backup()
 
@@ -272,6 +273,9 @@ def calculate_new_level_requirement(level):
     """
     return pow(level, 3) * 1000
 
+
+
+
 def level_up(user_id, exp_data, level_data, level_requirements):
     
     user_level = level_data[user_id]
@@ -293,6 +297,9 @@ def level_up(user_id, exp_data, level_data, level_requirements):
         datafile.close()
     return (exp_data, level_data, level_requirements)
 
+
+
+
 def can_level_up(user_id, exp_data, level_data, level_requirements):
 
     user_level = level_data[user_id]
@@ -303,4 +310,24 @@ def can_level_up(user_id, exp_data, level_data, level_requirements):
         return True
     else:
         return False
+
+
+
+def sort_dict(data):
+    return dict(sorted(data.items(), key=lambda item: item[1], reverse = True))
+
+
+def get_leaderboard(exp_data, level_data):
+    sorted_exp_data = sort_dict(exp_data)
+    embed = discord.Embed(title="Leaderboard", timestamp=datetime.utcnow())
+    embed.set_footer(text="Leaderboard")
+    print(sorted_exp_data)
+    print(sorted_exp_data.keys())
+    print(sorted_exp_data.values())
     
+    for i in range(min(len(sorted_exp_data), 10)):
+        user_id = list(sorted_exp_data.keys())[i]
+        exp_value = list(sorted_exp_data.values())[i]
+        embed.add_field(name='\u200b', value=f"<@{user_id}>: {exp_value} exp", inline=False)
+        
+    return embed

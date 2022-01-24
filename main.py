@@ -147,5 +147,12 @@ async def level(ctx):
 
 
 
+
+@client.command()
+async def leaderboard(ctx):
+    embed = get_leaderboard(exp_data, level_data)
+    await ctx.send(embed=embed)
+    
+
 # Run the bot.
 client.run(bot_token)
