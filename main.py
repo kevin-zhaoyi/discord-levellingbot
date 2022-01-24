@@ -29,7 +29,7 @@ level_requirements = {}
 
 bot = discord.ext.commands.Bot
 
-
+role_ids = [731399058324848660, 933692390869446676, 933945534211825714, 933948618866589806, 934997343508496405]
 # ***********************************************
 
 
@@ -59,7 +59,7 @@ async def on_message(message):
     
     # EXP system on user message *****************************************
     # System is only eligible for users with Hero 5 role.
-    role_ids = [731399058324848660, 933692390869446676, 933945534211825714, 933948618866589806]
+    global role_ids
     HERO5_role = discord.utils.get(message.guild.roles, id=role_ids[0])
     if not HERO5_role in message.author.roles:
         return
@@ -69,7 +69,7 @@ async def on_message(message):
     global level_data
     global level_requirements
     global message_cooldown
-
+    
     # Check if the user exists
     if not is_user_in_data(user_id, exp_data):
         exp_data = create_new_user(user_id, exp_data)
@@ -90,13 +90,18 @@ async def on_message(message):
 
         # Random chance to get lots of exp
         if lottery_exp():
+            await message.author.send("+1000 ;)")
             exp_data = add_exp(user_id, exp_data, JACKPOT_EXP)
             
         message_cooldown = set_user_exp_cooldown(user_id, message_cooldown)
+        print(f"{message.author}: Lv {level_data[user_id]}/Exp {exp_data[user_id]}")
 
     # Check if the user is eligible for level up
     if can_level_up(user_id, exp_data, level_data, level_requirements):
-        exp_data, level_data, level_requirements = level_up(user_id, exp_data, level_data, level_requirements)
+        output = level_up(user_id, exp_data, level_data, level_requirements)
+        exp_data = output[0]
+        level_data = output[1]
+        level_requirements = output[2]
         await message.channel.send(f"Congratulations, you levelled up to level {level_data[user_id]}!")
         # Give user new role.
         new_role = discord.utils.get(message.guild.roles, id=role_ids[level_data[user_id]])
@@ -106,7 +111,7 @@ async def on_message(message):
         backup_data(exp_data, level_data)
         
         return
-
+    
 
         
     # Check if sufficient time has passed since last backup.
@@ -126,7 +131,13 @@ async def level(ctx):
     global exp_data
     global level_data
     global level_requirements
+    global role_ids
 
+    HERO5_role = discord.utils.get(ctx.message.guild.roles, id=role_ids[0])
+    if not HERO5_role in ctx.message.author.roles:
+        await ctx.send("You need to have Hero 5 role first to do this.")
+        return
+    
     user_id = str(ctx.message.author.id)
     user_exp = exp_data[user_id]
     user_level = level_data[user_id]

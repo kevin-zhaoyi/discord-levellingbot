@@ -229,7 +229,7 @@ Output: (bool)
     Is the exp gain on cooldown.
 """
 def is_on_exp_gain_cooldown(user_id, cooldowns):
-    COOLDOWN_TIME_SECS = 5
+    COOLDOWN_TIME_SECS = 10
     
     if time_since_last_exp(user_id, cooldowns) > COOLDOWN_TIME_SECS:
         return False
@@ -297,7 +297,8 @@ def can_level_up(user_id, exp_data, level_data, level_requirements):
 
     user_level = level_data[user_id]
     user_exp = exp_data[user_id]
-    print(level_requirements)
+    print(str(user_level + 1))
+    print(level_requirements.keys())
     if user_exp >= level_requirements[str(user_level + 1)]:
         return True
     else:
